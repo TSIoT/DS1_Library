@@ -38,17 +38,19 @@ void setup() {
 
 void loop() {
   int i;
-  delay(3000);
   ds1.LedStatus(true);
-
-  while(!sendBuffer[0].compareTo("0.0")) {
+  
+  do{
     sendBuffer[0]=sensorLib.readSensorValue(SensorLib::SensorType_HP20x_Altitude);
     sendBuffer[1]=sensorLib.readSensorValue(SensorLib::SensorType_HP20x_Pressure);
     delay(1000);
-  }
+  }while((sendBuffer[0].toFloat() == 0.0) || (sendBuffer[1].toFloat() == 0.0));
+
+  Serial.println(sendBuffer[0]);
+  Serial.println(sendBuffer[1]);
   
-  int times = 10;
-  ds1.sendDataTimes(sendBuffer,times,topicID);
+  int times = 2;
+  ds1.sendDataTimes(1,sendBuffer,topicID,times);
   ds1.EnablePower(DS1::AllPower,false);
   
   ds1.LedStatus(false);

@@ -53,7 +53,7 @@ public:
 	//void MultiPublish(int publishCount, byte **sendPayload, int *len, byte *topicId);
 	void MultiPublish(int publishCount, String sendPayload[], byte *topicId);
   void watchdogSleep(int minutes);
-  void sendDataTimes(String sendBuffer[],int times,byte topicID[]);
+  void sendDataTimes(int PublishCount ,String sendBuffer[],byte *topicID ,int times);
   void LedStatus(boolean power);
   void LedFlashing(int flashingTimes);
 
