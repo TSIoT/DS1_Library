@@ -255,12 +255,12 @@ void DS1::MultiPublish(int publishCount, String sendPayload[], byte *topicId)
 	Serial.println();
 	this->SendDataToMaster(this->sendBuffer, index);
 }
-void DS1::sendDataTimes(String sendBuffer[],int times,byte topicID[]) 
+void DS1::sendDataTimes(int PublishCount ,String sendBuffer[],byte *topicID ,int times) 
 {
   char tempByte;
     for(int i=0;i<times;i++)
     {
-       MultiPublish(2,sendBuffer,topicID);
+       MultiPublish(PublishCount,sendBuffer,topicID);
        while(handleDevData() == 0) {
           ;
        }
