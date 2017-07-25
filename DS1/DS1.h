@@ -16,6 +16,7 @@
 #define AnalogPin 8
 #define DigitalPin 10
 #define LED A2
+#define BatteryPin A4
 
 class DS1
 {
@@ -56,6 +57,7 @@ public:
   void sendDataTimes(int PublishCount ,String sendBuffer[],byte *topicID ,int times);
   void LedStatus(boolean power);
   void LedFlashing(int flashingTimes);
+  String GetSerialData(void);
 
 private:	
 	byte sendBuffer[LoRa_MAX_BUFFER_SIZE] = { 0 };//

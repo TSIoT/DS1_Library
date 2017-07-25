@@ -13,6 +13,7 @@ public:
   {
     SensorType_Moisture,
     SensorType_AirQuality,
+    SensorType_UV,
     SensorType_DHT11_Humidity,
     SensorType_DHT11_Temperature,
     SensorType_DHT22_Humidity,
@@ -27,7 +28,8 @@ public:
     SensorType_HP20x_Altitude,
     SensorType_HP20x_Pressure,
     SensorType_HP20x_Temperature,
-    SensorType_DustSensor
+    SensorType_DustSensor,
+    SensorType_Battery
   };
 
   SensorLib();
@@ -40,6 +42,10 @@ public:
 private:
   String sensorBuffer = "";
   String testBuffer[DATA_LEN];
+  //float UVSensor(void);
+  String UVSensor(void);
+  float sensorValue = 0;
+  int count = 0;
   
 };
 

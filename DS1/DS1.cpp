@@ -310,7 +310,21 @@ void DS1::LedFlashing(int flashingTimes)
         delay(250L);
     }
 }
-
+String DS1::GetSerialData(void)
+{
+  int len;
+  String data="";
+  delay(100);
+  len = Serial1.available();
+  if (len>0)
+  {
+    for (int i = 0; i < len; i++)
+    {     
+      data = data + (char)Serial1.read();
+    }
+  }
+  return data;
+}
 /*
 void DS1::MultiPublish(int publishCount, byte **sendPayload, int *len, byte *topicId)
 {
@@ -350,7 +364,7 @@ int DS1::readDataFromSerial(char *buffer,unsigned long timeout)
 			{
 				
 				buffer[index] = Serial1.read();
-				//Serial.print(buffer[index]);
+				Serial.print(buffer[index]);
 				index++;
 			}
 		}
@@ -384,9 +398,7 @@ int DS1::handleDevData()
     Serial.print("Recv:");
     Serial.println(len);
    }
-    
 
-    
    return len;
 }
 
