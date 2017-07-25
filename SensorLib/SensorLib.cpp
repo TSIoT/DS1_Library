@@ -35,6 +35,7 @@ void SensorLib::Init(SensorLib_Type sensorType)
   {
       case SensorType_Moisture:
       case SensorType_AirQuality:
+      case SensorType_UV:
           sensorBuffer ="";
           pinMode(AnalogPowerEnablePin, OUTPUT);
           digitalWrite(AnalogPowerEnablePin, true);
@@ -98,8 +99,16 @@ String SensorLib::readSensorValue(SensorLib_Type sensorType)
   {
     case SensorType_Moisture:
     case SensorType_AirQuality:
-      sensorBuffer = String(analogRead(AnalogPin),DEC);
+      sensorValue = 0;
+      for(count=0;count<1000;count++) {
+        sensorValue = sensorValue + analogRead(AnalogPin);
+      }
+      sensorValue = sensorValue/1000;
+      sensorBuffer = String(sensorValue,FLOAT_ROUND);
       return sensorBuffer;
+    case SensorType_UV:
+      sensorBuffer = UVSensor();
+      return sensorBuffer;      
     case SensorType_DHT11_Humidity:
     case SensorType_DHT22_Humidity:
       sensorBuffer = String(dht.readHumidity(),FLOAT_ROUND);
@@ -141,6 +150,14 @@ String SensorLib::readSensorValue(SensorLib_Type sensorType)
     case SensorType_DustSensor:
       sensorBuffer = String(dustsensor.readConcentration(),FLOAT_ROUND);
       return sensorBuffer;
+    case SensorType_Battery:
+      sensorValue = 0;
+      for(count=0;count<1000;count++) {
+        sensorValue = sensorValue + analogRead(BatteryPin);
+      }
+      sensorValue = sensorValue/1000;
+      sensorBuffer = String(sensorValue,FLOAT_ROUND);
+      return sensorBuffer;
   }
 }
 int SensorLib::freeRam () 
@@ -149,3 +166,22 @@ int SensorLib::freeRam ()
   int v; 
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
 }
+
+String SensorLib::UVSensor(void)
+{
+  float Vsig;
+  
+  int sensorValue;
+  long  sum=0;
+  for(int i=0;i<1024;i++)
+   {  
+      sensorValue=analogRead(AnalogPin);
+      sum=sensorValue+sum;
+      delay(2);
+   }   
+ sum = sum >> 10;
+ Vsig = sum*4980.0/1023.0; // Vsig is the value of voltage measured from the SIG pin of the Grove interface
+ sensorBuffer = String(Vsig,FLOAT_ROUND);
+ return sensorBuffer;
+}
+
