@@ -4,11 +4,16 @@
 
 #define BUFFER_MAX_SIZE 20
 #define DATALENGTH 2
+#define TIMES 2
 String sendBuffer[DATALENGTH];  
+byte topicID[]={1,2};
+
 DS1 ds1;
 SensorLib lib;
+
 int i;
 int ram;
+
 // Define sensor variable
 #if defined(SENSOR_SHT2X)
     float sht2x_temperature = 0.0;
@@ -50,13 +55,16 @@ int ram;
     float battery = 0.0;
 #endif
 
+#if defined(SLEEP_MODE)
+  #define PERIOD 1
+#endif
+
 #if defined(RF_S76S)
   #include "S76S.h"
   S76S s76s;
+  
   char *address = "10 0 0";
-  char *slaveNode = "10 0 1";
   char *gatewayAddr = "10 0 254";
-  char *index = "1";
   bool flag;
   String data = "12345.67890";
 #endif
@@ -66,17 +74,12 @@ int ram;
 
 #endif
 
-
-
-
-byte topicID[]={1,2};
-
 void setup() {
   // Initial Serial port
   Serial.begin(9600);
   Serial1.begin(9600);
   //When terminal open,program continue.
-  while(!Serial){};
+  //while(!Serial){};
 /*#if defined(SENSOR_DHT)
     Serial.println("SENSOR_DHT");
 #endif
@@ -155,11 +158,6 @@ void loop() {
   ram = freeRam();
   Serial.print("Ram = ");
   Serial.println(ram);
-
-#if defined(RF_S76S)
-  s76s.Publish(data,topicID[1]);
-  delay(3000);
-#endif
   
 // Get Sensor value and print
 #if defined(SENSOR_SHT2X)
@@ -233,6 +231,26 @@ void loop() {
     Serial.println(battery);
 #endif
 
+#if defined(RF_S76S)
+  //Send single data
+  //s76s.Publish(data,topicID[1]);
+  //Send two or more data
+  sendBuffer[0]=String(sht2x_humility,2);
+  sendBuffer[1]=String(sht2x_temperature,2);
+  topicID[0]=17;
+  topicID[1]=18;
+  s76s.MultiPublish(TIMES,sendBuffer,topicID);
+  delay(3000);
+
+  sendBuffer[0]=String(battery,2);
+  sendBuffer[1]=String(ram);
+  topicID[0]=17;
+  topicID[1]=18;
+  s76s.MultiPublish(TIMES,sendBuffer,topicID);
+  delay(3000);
+  
+#endif
+
 
 // Sleep mode ,close power,wake up,open power
 #if defined(SLEEP_MODE)
@@ -243,7 +261,7 @@ void loop() {
   ds1.EnablePower(DS1::I2CPower,false);
   
   delay(250);
-  ds1.watchdogSleep(60);
+  ds1.watchdogSleep(PERIOD);
   delay(250);
   
   ds1.EnablePower(DS1::RootPower,true);
@@ -251,9 +269,11 @@ void loop() {
   ds1.EnablePower(DS1::DigtialPower,true);
   ds1.EnablePower(DS1::I2CPower,true);
   
+  delay(1000);
   lib.Init();
-
-  ds1.InitRFModule(DS1::RFType_LoRaLan_Slave);
+  delay(1000);
+  
+  s76s.StartWork(true);
 #endif
 
 

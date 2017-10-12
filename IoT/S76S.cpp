@@ -16,7 +16,7 @@ void S76S::Init(RFType type)
    Serial.begin(BaudRate);
    Serial1.begin(BaudRate);
   int cmdIndex = 0;
-  char *cmd[] = { "LoraAutoBoot 0\r","LoraStartWork DISABLE\r","SetSystemMode inNormal\r","LoraMode SLAVE\r","LoraMode MASTER\r" };
+  char *cmd[] = { "LoraAutoBoot 0\r","LoraStartWork DISABLE\r","SetSystemMode inNormal\r","LoraMode SLAVE\r","LoraMode MASTER\r","LoraSetSF 9\r" };
 
   delay(1000);
   resetRecv();
@@ -58,6 +58,11 @@ void S76S::Init(RFType type)
   
   }
 
+  Serial.print("LoraSetSF 9");
+  cmdIndex = 5;
+  while (!SendCommand(cmd[cmdIndex])) { delay(1000); }
+  delay(400);
+
   Serial.println("RF module init finish");
 }
 
@@ -75,14 +80,14 @@ bool S76S::SetAddress(char *address)
     Serial1.write(address, strlen(address));
     Serial1.write(cmdEndSymbol);
     ack = GetSerialData();
-
+/*
     //debug message
     Serial.println(ack);   
     Serial.print(cmd);
     Serial.print(blank);
     Serial.print(address);
     Serial.println(cmdEndSymbol);
-     
+ */    
     if(ack.equals("OK"))
     {
       Serial.println("My Adreess set successful!");
@@ -109,14 +114,14 @@ bool S76S::SetGateWayAddress(char *address)
     Serial1.write(address, strlen(address));
     Serial1.write(cmdEndSymbol);
     ack = GetSerialData();
-
+/*
     //debug message
     Serial.println(ack); 
     Serial.print(cmd);
     Serial.print(blank);
     Serial.print(address);
     Serial.println(cmdEndSymbol);
-     
+ */    
     
     if(ack.equals("OK"))
     {
@@ -146,12 +151,12 @@ bool S76S::StartWork(bool work)
     
     Serial1.write(cmd[cmdIndex], strlen(cmd[cmdIndex]));
     ack = GetSerialData();
-
+/*
     //debug message
     Serial.println(ack); 
     Serial.print(cmd[cmdIndex]);
     Serial.println(cmdEndSymbol);
-        
+*/        
     if(ack.equals("OK") && (work == true))
     {
       Serial.println("Lora Start Work!");
@@ -171,6 +176,7 @@ bool S76S::StartWork(bool work)
 }
 
 //public
+/*
 bool S76S::AddSlaveNode(char *address,char *index)
 {
   bool isSucceed = 0;
@@ -294,7 +300,7 @@ void S76S::MasterDownlink(char *address,char *data)
     ack = GetSerialData();
     Serial.println(ack);
 }
-
+*/
 //public
 void S76S::SlaveUplink(char *buffer,int dataLength)
 {
