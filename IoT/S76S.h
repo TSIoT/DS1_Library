@@ -34,20 +34,21 @@ public:
 	bool SetGateWayAddress(char *address);
 	
 	bool StartWork(bool work);
-
+/*
 	bool AddSlaveNode(char *address,char *index);
 
-	void Publish(String sendPayload, byte topicId);
+	
 
   bool SaveSlaveNode(char *index);
 
   bool RemoveSlaveNode(char *index);
 
   void MasterDownlink(char *address,char *data);
-
+*/
   void SlaveUplink(char *buffer,int dataLength);
 
 	//void MultiPublish(int publishCount, byte **sendPayload, int *len, byte *topicId);
+  void Publish(String sendPayload, byte topicId);
 	void MultiPublish(int publishCount, String sendPayload[], byte *topicId);
   void sendDataTimes(int PublishCount ,String sendBuffer[],byte *topicID ,int times);
   String GetSerialData(void);

@@ -1,8 +1,8 @@
 /* It is used sensor library */
-//#define SENSOR_BATTERY_POWER    // battery power
+#define SENSOR_BATTERY_POWER    // battery power
 //#define SENSOR_HP20X            //I2C barometer
 //#define SENSOR_TSL2561          //I2C digital light
-//#define SENSOR_SHT2X            //ALG temperature & humidity
+#define SENSOR_SHT2X            //I2C temperature & humidity
 //#define SENSOR_SOIL_MOISTURE  //ALG soil moisture
 //#define SENSOR_PPD42            //DIG dust
 //#define SENSOR_CO2            //DIG co2
